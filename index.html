@@ -136,41 +136,56 @@
         }
     </script>
     <script>
-document.addEventListener("keydown", function (e) {
-    // Ctrl + U
-    if (e.ctrlKey && e.key === "u") {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl + Shift + I
-    if (e.ctrlKey && e.shiftKey && e.key === "I") {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl + Shift + C
-    if (e.ctrlKey && e.shiftKey && e.key === "C") {
-        e.preventDefault();
-        return false;
-    }
-    // F12
-    if (e.key === "F12") {
-        e.preventDefault();
-        return false;
-    }
-});
-</script>
-		<script>
+// Deteksi mobile
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+// Disable klik kanan (optional, tetap jalan di mobile & desktop)
 document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
 });
-</script>
-<script>
-setInterval(function () {
-    if (window.outerWidth - window.innerWidth > 160 ||
-        window.outerHeight - window.innerHeight > 160) {
-        document.body.innerHTML = "<h1>Akses diblokir</h1>";
-    }
-}, 1000);
+
+// Block keybind hanya di desktop
+if (!isMobile) {
+    document.addEventListener("keydown", function (e) {
+        // Ctrl + U
+        if (e.ctrlKey && e.key.toLowerCase() === "u") {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl + Shift + I
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl + Shift + C
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") {
+            e.preventDefault();
+            return false;
+        }
+        // F12
+        if (e.key === "F12") {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Deteksi DevTools (desktop only, lebih aman)
+    let devtoolsOpen = false;
+
+    setInterval(function () {
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+
+        if (widthThreshold || heightThreshold) {
+            if (!devtoolsOpen) {
+                devtoolsOpen = true;
+                document.body.innerHTML = "<h1 style='text-align:center;margin-top:20%;'>Akses diblokir</h1>";
+            }
+        } else {
+            devtoolsOpen = false;
+        }
+    }, 1000);
+}
 </script>
     <script>
         var i = 0;
